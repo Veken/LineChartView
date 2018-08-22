@@ -64,8 +64,6 @@ public class LineChartView extends View {
     //图片画笔
     private Paint bitmapPaint;
 
-    private Canvas bitmapCanvas;
-
     //留一点间隔，来显示pop的高度
     private int showPopHeight = 30;
 
@@ -320,13 +318,15 @@ public class LineChartView extends View {
         drawYLine(canvas);
         //画X轴标签
         drawXLable(canvas);
+        if(isClick){
+            showClick(clickIndex,canvas);
+        }
         //画Y轴上的数值
         drawYData(canvas);
         //画数据圆点
         drawDataPoints(canvas);
 //        drawBgColor();              // 绘制背景色块
 
-        bitmapCanvas = canvas;
     }
 
     /**
@@ -337,7 +337,7 @@ public class LineChartView extends View {
         for(int i = 0;i<mList.size();i++){
             yDataWidth = yDataPaint.measureText(String.valueOf(mList.get(i).getValue()));
             if(isClick&&clickIndex==i){
-                yDataPaint.setColor(Color.WHITE);
+                yDataPaint.setColor(Color.parseColor("#ffffff"));
             }else{
                 yDataPaint.setColor(mContext.getResources().getColor(defaultColor));
             }
@@ -408,8 +408,8 @@ public class LineChartView extends View {
             if (Math.abs(touchX - dataX) < xLength / 2) {
                 isClick = true;
                 clickIndex = i;
+                invalidate();
                 //显示点击之后的图片
-                showClick(i);
             }
         }
         return true;
@@ -465,16 +465,14 @@ public class LineChartView extends View {
     /**
      * 点击数据点后，展示详细的数据值
      */
-    private void showClick(int index) {
-        if(bitmapCanvas==null)return;
+    private void showClick(int index,Canvas canvas) {
         float tvWidth = yDataPaint.measureText(String.valueOf(mList.get(index).getValue()));
         float width = tvWidth+DensityUtils.dip2px(mContext,pointMarginHeight);
         float height = getFontHeight(yDataPaint)+DensityUtils.dip2px(mContext,pointMarginHeight);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(),showPicResource);
         Bitmap resizeBitmap = resizeBitmap(bitmap, width, height);
         RectF rect1 = new RectF(mList.get(index).getxAxis()-width/2, mList.get(index).getyAxis()-height-DensityUtils.dip2px(mContext,marginHeight),mList.get(index).getxAxis()+width/2, mList.get(index).getyAxis()-DensityUtils.dip2px(mContext,15));
-        bitmapCanvas.drawBitmap(resizeBitmap,null,rect1,bitmapPaint);
-        invalidate();
+        canvas.drawBitmap(resizeBitmap,null,rect1,bitmapPaint);
     }
 
     /**
