@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
         for(int i=0;i<7;i++){
             LineChartBean lineChartBean = new LineChartBean();
-            lineChartBean.setDate(i+"");
-            lineChartBean.setValue(random.nextInt(10000)+"");
+            lineChartBean.setValue(String.valueOf(random.nextInt(10000)));
+            lineChartBean.setDate(String.valueOf(i));
             mList.add(lineChartBean);
         }
         chartView.setData(mList);
@@ -37,4 +37,9 @@ public class MainActivity extends AppCompatActivity {
         chartView.setxLableTextColor(R.color.ylable_textColor);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        chartView.recycleBitmap();
+    }
 }

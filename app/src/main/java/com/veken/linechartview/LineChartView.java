@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -28,6 +29,7 @@ public class LineChartView extends View {
     private float yLength;
     private float startPointX = 0.0f;
     private float startPointY = 0.0f;
+    private float xMarginWidth;
     private float startX = 0.0f;
     private float startY = 0.0f;
     //Popwindow的x，y坐标
@@ -95,6 +97,12 @@ public class LineChartView extends View {
     private int clickIndex = -1;            // 被点击的数据点的索引值
 
     private Context mContext;
+    private Bitmap bitmap;
+    private Bitmap resizeBitmap;
+    private float firstDataWidth;
+    private float yLableWidth;
+    private float viewWidth;
+    private float viewHeight;
 
     public int getAxisColor() {
         return axisColor;
@@ -248,28 +256,29 @@ public class LineChartView extends View {
         initMeasure();
     }
 
+
     /**
      * 获取宽高
      */
     private void initMeasure() {
-        int width = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
-        int height = DensityUtils.px2dip(mContext,getMeasuredHeight() - getPaddingTop()-getPaddingBottom());
-
+        //控件的宽度
+        viewWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+        viewHeight = DensityUtils.px2dip(mContext,getMeasuredHeight() - getPaddingTop()-getPaddingBottom());
         //Y轴lable文字宽度
-        float yLableWidth = yTextLablePaint.measureText(yLableText);
+        yLableWidth = yTextLablePaint.measureText(yLableText);
         //X轴lable文字高度
         float xLableHeight = getFontHeight(xTextLablePaint) + DensityUtils.dip2px(mContext,marginHeight);
-
-        //目前是显示7个数据
-        xLength = width / mList.size();
-        yLength = DensityUtils.dip2px(mContext,height-marginHeight-xLableHeight);
+        //y轴的长度
+        yLength = DensityUtils.dip2px(mContext,viewHeight-marginHeight-xLableHeight);
         startX = getPaddingLeft();
         //起点坐标空出点画Y轴label
         startY = getPaddingTop();
-
-        //X轴起始坐标(第一个值跟YLable文字的长度比较，取最长的,不然如果第一个值很大，会导致显示不全)
-        float firstDataWidth = yDataPaint.measureText(String.valueOf(mList.get(0).getValue()));
-        startPointX = startX +yLableWidth/2>firstDataWidth/2?yLableWidth/2:firstDataWidth/2+DensityUtils.dip2px(mContext,marginHeight);
+        //X轴起始坐标(第一个值跟YLable文字的长度比较，取最长的,不然如果第一个值很大，会导致显示不全,还要加上文字间隔的宽度，用来显示点击之后的图片)
+        xMarginWidth = yLableWidth >firstDataWidth? yLableWidth /2: firstDataWidth/2;
+        //每一个X轴点之间的长度
+        xLength = (viewWidth-xMarginWidth) / mList.size();
+        firstDataWidth = yDataPaint.measureText(String.valueOf(mList.get(0).getValue()))+ DensityUtils.dip2px(mContext,pointMarginHeight);
+        startPointX = startX + xMarginWidth;
         //Y轴起始坐标
         startPointY = startY + getFontHeight(yTextLablePaint)+DensityUtils.dip2px(mContext,marginHeight) +yLength;
     }
@@ -337,7 +346,7 @@ public class LineChartView extends View {
         for(int i = 0;i<mList.size();i++){
             yDataWidth = yDataPaint.measureText(String.valueOf(mList.get(i).getValue()));
             if(isClick&&clickIndex==i){
-                yDataPaint.setColor(Color.parseColor("#ffffff"));
+                yDataPaint.setColor(Color.WHITE);
             }else{
                 yDataPaint.setColor(mContext.getResources().getColor(defaultColor));
             }
@@ -396,7 +405,7 @@ public class LineChartView extends View {
      * @param canvas
      */
     private void drawXLine(Canvas canvas) {
-        canvas.drawLine(startPointX, startPointY , startPointX + xLength*mList.size(), startPointY, mScaleLinePaint);
+        canvas.drawLine(startPointX, startPointY , startPointX + viewWidth-xMarginWidth, startPointY, mScaleLinePaint);
     }
 
     @Override
@@ -466,12 +475,16 @@ public class LineChartView extends View {
      * 点击数据点后，展示详细的数据值
      */
     private void showClick(int index,Canvas canvas) {
-        float tvWidth = yDataPaint.measureText(String.valueOf(mList.get(index).getValue()));
-        float width = tvWidth+DensityUtils.dip2px(mContext,pointMarginHeight);
         float height = getFontHeight(yDataPaint)+DensityUtils.dip2px(mContext,pointMarginHeight);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),showPicResource);
-        Bitmap resizeBitmap = resizeBitmap(bitmap, width, height);
-        RectF rect1 = new RectF(mList.get(index).getxAxis()-width/2, mList.get(index).getyAxis()-height-DensityUtils.dip2px(mContext,marginHeight),mList.get(index).getxAxis()+width/2, mList.get(index).getyAxis()-DensityUtils.dip2px(mContext,15));
+        float width = yDataPaint.measureText(mList.get(index).getValue())+DensityUtils.dip2px(mContext,pointMarginHeight);
+        bitmap = BitmapFactory.decodeResource(getResources(),showPicResource);
+        resizeBitmap = resizeBitmap(bitmap, firstDataWidth, height);
+        Log.d("第一个点的坐标：",mList.get(index).getxAxis()+"");
+        //因为图片下边有个尖角，所以间隔会有一点点变化
+        RectF rect1 = new RectF(mList.get(index).getxAxis()-width/2,
+                mList.get(index).getyAxis()-height-DensityUtils.dip2px(mContext,marginHeight),
+                mList.get(index).getxAxis()+width/2,
+                mList.get(index).getyAxis()-DensityUtils.dip2px(mContext,18));
         canvas.drawBitmap(resizeBitmap,null,rect1,bitmapPaint);
     }
 
@@ -496,5 +509,14 @@ public class LineChartView extends View {
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width,
                 height, matrix, true);
         return resizedBitmap;
+    }
+
+    /**
+     * 释放bitmap资源
+     */
+    public void recycleBitmap(){
+        if(bitmap!=null&&!bitmap.isRecycled()){
+            bitmap.recycle();
+        }
     }
 }

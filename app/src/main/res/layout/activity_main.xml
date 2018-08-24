@@ -9,7 +9,6 @@
         <com.veken.linechartview.LineChartView
             android:id="@+id/chart_view_1"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginLeft="20dp" />
+            android:layout_height="300dp" />
 
 </RelativeLayout>
