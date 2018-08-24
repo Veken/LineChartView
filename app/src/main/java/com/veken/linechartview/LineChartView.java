@@ -1,6 +1,7 @@
 package com.veken.linechartview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -32,16 +34,11 @@ public class LineChartView extends View {
     private float xMarginWidth;
     private float startX = 0.0f;
     private float startY = 0.0f;
-    //Popwindow的x，y坐标
-    private int yoff;
-    private int xoff;
     //数据
     private List<LineChartBean> mList = new ArrayList<>();
 
-
     //点击后展示的图片
     private int showPicResource = R.mipmap.click_icon;
-
 
     //y轴lable文字
     private String yLableText;
@@ -66,26 +63,22 @@ public class LineChartView extends View {
     //图片画笔
     private Paint bitmapPaint;
 
-    //留一点间隔，来显示pop的高度
-    private int showPopHeight = 30;
-
     //文字和X轴Y轴高度间隔
-    private int marginHeight = 10;
+    private int marginHeight;
     //点上的文字和点之间的间隔
-    private int pointMarginHeight = 20;
+    private int pointMarginHeight;
 
     //Y轴数据的文字宽度
     private float yDataWidth;
-
     //默认文字大小
     private int defaultTextSize = 14;
     //默认圆心大小
-    private int pointRadius = 4;
+    private int pointDefaultRadius = 4;
     //点击之后里面圆的圆心
-    private int pointCircleRadius = 2;
+    private int pointClickRadius = 2;
     private int defaultStrokeWidth = 2;
     //Y轴lable颜色
-    private  int yLableTextColor = R.color.ylable_textColor;
+    private int yLableTextColor = R.color.ylable_textColor;
     //默认数据颜色
     private int defaultColor = R.color.default_color;
     //X轴Lable颜色
@@ -104,6 +97,21 @@ public class LineChartView extends View {
     private float viewWidth;
     private float viewHeight;
 
+    public int getPointClickRadius() {
+        return pointClickRadius;
+    }
+
+    public void setPointClickRadius(int pointClickRadius) {
+        this.pointClickRadius = pointClickRadius;
+    }
+
+    public int getPointDefaultRadius() {
+        return pointDefaultRadius;
+    }
+
+    public void setPointDefaultRadius(int pointDefaultRadius) {
+        this.pointDefaultRadius = pointDefaultRadius;
+    }
     public int getAxisColor() {
         return axisColor;
     }
@@ -121,13 +129,6 @@ public class LineChartView extends View {
         this.showPicResource = showPicResource;
     }
 
-    public int getPointCircleRadius() {
-        return pointCircleRadius;
-    }
-
-    public void setPointCircleRadius(int pointCircleRadius) {
-        this.pointCircleRadius = pointCircleRadius;
-    }
 
     public int getDefaultTextSize() {
         return defaultTextSize;
@@ -189,6 +190,18 @@ public class LineChartView extends View {
     public LineChartView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
+//        TypedArray typedValue = context.obtainStyledAttributes(attrs,R.styleable.LineChartView);
+//        showPicResource = (int) typedValue.getDimension(R.styleable.LineChartView_showPicResource,R.mipmap.click_icon);
+//        marginHeight = (int) typedValue.getDimension(R.styleable.LineChartView_marginHeight,10);
+//        pointMarginHeight = typedValue.getInteger(R.styleable.LineChartView_pointMarginHeight,20);
+//        defaultTextSize = typedValue.getInteger(R.styleable.LineChartView_defaultTextSize,14);
+//        pointDefaultRadius = typedValue.getInteger(R.styleable.LineChartView_pointDefaultRadius,4);
+//        pointClickRadius = typedValue.getInteger(R.styleable.LineChartView_pointClickRadius,2);
+//        defaultStrokeWidth = typedValue.getInteger(R.styleable.LineChartView_defaultStrokeWidth,2);
+//        yLableTextColor = typedValue.getInteger(R.styleable.LineChartView_yLableTextColor,R.color.ylable_textColor);
+//        defaultColor = typedValue.getInteger(R.styleable.LineChartView_defaultColor,R.color.default_color);
+//        xLableTextColor = typedValue.getInteger(R.styleable.LineChartView_xLableTextColor,R.color.ylable_textColor);
+//        axisColor = typedValue.getInteger(R.styleable.LineChartView_axisColor,axisColor);
         init();
     }
 
@@ -223,8 +236,8 @@ public class LineChartView extends View {
         pointPaint.setColor(mContext.getResources().getColor(defaultColor));
         pointPaint.setStrokeWidth(defaultStrokeWidth);
 
-        pointCircleRadius = DensityUtils.dip2px(mContext, pointCircleRadius);
-        pointRadius = DensityUtils.dip2px(mContext,pointRadius);
+        pointClickRadius = DensityUtils.dip2px(mContext, pointClickRadius);
+        pointDefaultRadius = DensityUtils.dip2px(mContext,pointDefaultRadius);
 
         //Y轴lable画笔
         yTextLablePaint = new Paint();
@@ -300,7 +313,7 @@ public class LineChartView extends View {
         }
         for(int i = 0;i<mList.size();i++){
             //将所有的值根据高度均分(如果需要显示点击之后的popwindow,可以加上popwindow的高度，如果不需要，可以去掉，或者设置为0)
-            averHeight = (yLength - DensityUtils.dip2px(mContext,showPopHeight+pointMarginHeight))/max;
+            averHeight = (yLength - DensityUtils.dip2px(mContext,pointMarginHeight))/max;
             mList.get(i).setyAxis(startPointY - averHeight * Float.parseFloat(mList.get(i).getValue()));
         }
     }
@@ -449,24 +462,24 @@ public class LineChartView extends View {
             // 点击后，绘制数据点
             if (isClick&&clickIndex == i) {
                 //绘制白色背景
-                canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(), pointRadius+DensityUtils.dip2px(mContext,2), transparentPaint);
+                canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(), pointDefaultRadius+DensityUtils.dip2px(mContext,2), transparentPaint);
                 pointSelectedPaint.setColor(mContext.getResources().getColor(defaultColor));
                 //绘制外层圆环
-                canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(),pointRadius+DensityUtils.dip2px(mContext,2), pointSelectedPaint);
+                canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(),pointDefaultRadius+DensityUtils.dip2px(mContext,2), pointSelectedPaint);
                 pointPaint.setColor(mContext.getResources().getColor(defaultColor));
                 pointPaint.setStyle(Paint.Style.FILL);
                 pointPaint.setStrokeWidth(defaultStrokeWidth);
                 //绘制点击之后圆点的小圆
-                canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(),pointCircleRadius, pointPaint);
+                canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(),pointClickRadius, pointPaint);
 
             }else{
                 //绘制白色背景
-                canvas.drawCircle(mList.get(i).getxAxis(),mList.get(i).getyAxis(), pointRadius, transparentPaint);
+                canvas.drawCircle(mList.get(i).getxAxis(),mList.get(i).getyAxis(), pointDefaultRadius, transparentPaint);
                 pointPaint.setColor(mContext.getResources().getColor(defaultColor));
                 pointPaint.setStrokeWidth(defaultStrokeWidth);
                 pointPaint.setStyle(Paint.Style.STROKE);
                 //绘制圆环
-                canvas.drawCircle(mList.get(i).getxAxis(),mList.get(i).getyAxis(), pointRadius, pointPaint);
+                canvas.drawCircle(mList.get(i).getxAxis(),mList.get(i).getyAxis(), pointDefaultRadius, pointPaint);
             }
         }
     }
