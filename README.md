@@ -1,6 +1,76 @@
 # LineChartView
-这是一个关于折线图的自定义view</br>
-![](https://github.com/Veken/LineChartView/raw/master/image/linechartview.gif)
+<br>
+## Introduction
+&nbsp;&nbsp;&nbsp;&nbsp;LineChartView这是一个关于折线图的自定义view。<br>
+
+## Version
+
+## Usage
+
+### Gradle
+* Step 1. Add LineChartView
+
+```
+    dependencies {
+	        compile 'com.veken:linechartview:1.0.0'
+	}
+```
+
+
+
+以组合图表为例
+### XML
+```XML
+  <com.veken.linecharviewmodule.LineChartView
+            android:id="@+id/chart_view_1"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:showPicResource="@mipmap/ic_launcher"
+            app:defaultStrokeWidth="0.5dp"
+            app:pointClickRadius="3dp"
+            app:defaultTextSize="16sp"
+            app:pointDefaultRadius="2dp" />
+
+```
+### Java
+```Java
+
+```
+### Data
+```Java
+
+```
+
+```Java
+
+```
+
+
+## License
+```
+Copyright (C) 2016 Idtk
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+******
+
+## About Me
 
 简书地址：https://www.jianshu.com/p/4a5949d92821
+
+
+
+
+![](https://github.com/Veken/LineChartView/raw/master/image/linechartview.gif)
+
 
