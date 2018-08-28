@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LineChartView">
+        <attr name="showPicResource" format="reference"/>
+        <attr name="marginHeight" format="dimension"/>
+        <attr name="pointMarginHeight" format="dimension"/>
+        <attr name="defaultTextSize" format="dimension"/>
+        <attr name="pointDefaultRadius" format="dimension"/>
+        <attr name="pointClickRadius" format="dimension"/>
+        <attr name="defaultStrokeWidth" format="dimension"/>
+        <attr name="textAndPicMargin" format="dimension"/>
+        <attr name="yLableTextColor" format="color"/>
+        <attr name="defaultColor" format="color"/>
+        <attr name="xLableTextColor" format="color"/>
+        <attr name="axisColor" format="color"/>
+        <attr name="clickBgColor" format="color"/>
+    </declare-styleable>
+</resources>

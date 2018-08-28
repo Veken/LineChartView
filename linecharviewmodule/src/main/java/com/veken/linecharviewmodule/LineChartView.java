@@ -1,4 +1,4 @@
-package com.veken.linechartview;
+package com.veken.linecharviewmodule;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,8 +11,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -61,12 +59,14 @@ public class LineChartView extends View {
     //Y轴上的数据画笔
     private Paint yDataPaint;
     //图片画笔
-    private Paint bitmapPaint;
+    private Paint clickPaint;
 
     //文字和X轴Y轴高度间隔
-    private int marginHeight;
+    private int axisMarginHeight;
     //点上的文字和点之间的间隔
     private int pointMarginHeight;
+    //文字和图片之间的间隔
+    private int textAndPicMargin;
 
     //Y轴数据的文字宽度
     private float yDataWidth;
@@ -78,16 +78,21 @@ public class LineChartView extends View {
     private int pointClickRadius = 2;
     private int defaultStrokeWidth = 2;
     //Y轴lable颜色
-    private int yLableTextColor = R.color.ylable_textColor;
+    private int yLableTextColor;
     //默认数据颜色
-    private int defaultColor = R.color.default_color;
+    private int defaultColor;
     //X轴Lable颜色
-    private int xLableTextColor = R.color.ylable_textColor;
+    private int xLableTextColor;
     //坐标轴的颜色
-    private int axisColor = R.color.axisColor;
+    private int axisColor;
+    //点击之后的背景颜色
+    private int clickBgColor;
 
     private boolean isClick;                // 是否点击了数据点
     private int clickIndex = -1;            // 被点击的数据点的索引值
+
+    //画的种类
+    private DrawType drawType;
 
     private Context mContext;
     private Bitmap bitmap;
@@ -96,6 +101,19 @@ public class LineChartView extends View {
     private float yLableWidth;
     private float viewWidth;
     private float viewHeight;
+    private float bitmapHeight;
+    private float bitmapWidth;
+    private float yDataHeight;
+    private float xLableHeight;
+
+
+    public int getClickBgColor() {
+        return clickBgColor;
+    }
+
+    public void setClickBgColor(int clickBgColor) {
+        this.clickBgColor = clickBgColor;
+    }
 
     public int getPointClickRadius() {
         return pointClickRadius;
@@ -170,14 +188,22 @@ public class LineChartView extends View {
         this.xLableTextColor = xLableTextColor;
     }
 
-    public int getMarginHeight() {
-        return marginHeight;
+
+    public int getTextAndPicMargin() {
+        return textAndPicMargin;
     }
 
-    public void setMarginHeight(int marginHeight) {
-        this.marginHeight = marginHeight;
+    public void setTextAndPicMargin(int textAndPicMargin) {
+        this.textAndPicMargin = textAndPicMargin;
     }
 
+    public DrawType getDrawType() {
+        return drawType;
+    }
+
+    public void setDrawType(DrawType drawType) {
+        this.drawType = drawType;
+    }
 
     public LineChartView(Context context) {
         this(context,null);
@@ -190,18 +216,20 @@ public class LineChartView extends View {
     public LineChartView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-//        TypedArray typedValue = context.obtainStyledAttributes(attrs,R.styleable.LineChartView);
-//        showPicResource = (int) typedValue.getDimension(R.styleable.LineChartView_showPicResource,R.mipmap.click_icon);
-//        marginHeight = (int) typedValue.getDimension(R.styleable.LineChartView_marginHeight,10);
-//        pointMarginHeight = typedValue.getInteger(R.styleable.LineChartView_pointMarginHeight,20);
-//        defaultTextSize = typedValue.getInteger(R.styleable.LineChartView_defaultTextSize,14);
-//        pointDefaultRadius = typedValue.getInteger(R.styleable.LineChartView_pointDefaultRadius,4);
-//        pointClickRadius = typedValue.getInteger(R.styleable.LineChartView_pointClickRadius,2);
-//        defaultStrokeWidth = typedValue.getInteger(R.styleable.LineChartView_defaultStrokeWidth,2);
-//        yLableTextColor = typedValue.getInteger(R.styleable.LineChartView_yLableTextColor,R.color.ylable_textColor);
-//        defaultColor = typedValue.getInteger(R.styleable.LineChartView_defaultColor,R.color.default_color);
-//        xLableTextColor = typedValue.getInteger(R.styleable.LineChartView_xLableTextColor,R.color.ylable_textColor);
-//        axisColor = typedValue.getInteger(R.styleable.LineChartView_axisColor,axisColor);
+        TypedArray typedValue = context.obtainStyledAttributes(attrs,R.styleable.LineChartView);
+        showPicResource =  typedValue.getResourceId(R.styleable.LineChartView_showPicResource,R.mipmap.click_icon);
+        axisMarginHeight =  typedValue.getDimensionPixelSize(R.styleable.LineChartView_marginHeight,10);
+        pointMarginHeight = typedValue.getDimensionPixelSize(R.styleable.LineChartView_pointMarginHeight,30);
+        defaultTextSize = typedValue.getDimensionPixelSize(R.styleable.LineChartView_defaultTextSize,defaultTextSize);
+        pointDefaultRadius = typedValue.getDimensionPixelSize(R.styleable.LineChartView_pointDefaultRadius,4);
+        pointClickRadius = typedValue.getDimensionPixelSize(R.styleable.LineChartView_pointClickRadius,2);
+        defaultStrokeWidth = typedValue.getDimensionPixelSize(R.styleable.LineChartView_defaultStrokeWidth,2);
+        yLableTextColor = typedValue.getColor(R.styleable.LineChartView_yLableTextColor,0XFF99989d);
+        defaultColor = typedValue.getColor(R.styleable.LineChartView_defaultColor,0XFF5287F7);
+        xLableTextColor = typedValue.getColor(R.styleable.LineChartView_xLableTextColor,0XFF99989d);
+        axisColor = typedValue.getColor(R.styleable.LineChartView_axisColor,0XFF99989d);
+        textAndPicMargin = typedValue.getDimensionPixelSize(R.styleable.LineChartView_textAndPicMargin,20);
+        clickBgColor = typedValue.getColor(R.styleable.LineChartView_clickBgColor,0XFF5287F7);
         init();
     }
 
@@ -214,11 +242,11 @@ public class LineChartView extends View {
 
         mDataLinePaint.setAntiAlias(true);
         mDataLinePaint.setStrokeWidth(defaultStrokeWidth);
-        mDataLinePaint.setColor(mContext.getResources().getColor(defaultColor));
+        mDataLinePaint.setColor(defaultColor);
         //坐标轴的画笔
         mScaleLinePaint.setAntiAlias(true);
         mScaleLinePaint.setStrokeWidth(defaultStrokeWidth);
-        mScaleLinePaint.setColor(mContext.getResources().getColor(axisColor));
+        mScaleLinePaint.setColor(axisColor);
 
         //白色透明圆
         transparentPaint.setColor(Color.WHITE);
@@ -233,7 +261,7 @@ public class LineChartView extends View {
         //默认圆画笔
         pointPaint.setAntiAlias(true);
         pointPaint.setStyle(Paint.Style.STROKE);
-        pointPaint.setColor(mContext.getResources().getColor(defaultColor));
+        pointPaint.setColor(defaultColor);
         pointPaint.setStrokeWidth(defaultStrokeWidth);
 
         pointClickRadius = DensityUtils.dip2px(mContext, pointClickRadius);
@@ -242,23 +270,23 @@ public class LineChartView extends View {
         //Y轴lable画笔
         yTextLablePaint = new Paint();
         yTextLablePaint.setAntiAlias(true);
-        yTextLablePaint.setTextSize(DensityUtils.sp2px(mContext,defaultTextSize));
-        yTextLablePaint.setColor(mContext.getResources().getColor(yLableTextColor));
+        yTextLablePaint.setTextSize(defaultTextSize);
+        yTextLablePaint.setColor(yLableTextColor);
 
         //X轴lable画笔
         xTextLablePaint = new Paint();
         xTextLablePaint.setAntiAlias(true);
-        xTextLablePaint.setTextSize(DensityUtils.sp2px(mContext,defaultTextSize));
-        xTextLablePaint.setColor(mContext.getResources().getColor(xLableTextColor));
+        xTextLablePaint.setTextSize(defaultTextSize);
+        xTextLablePaint.setColor(xLableTextColor);
 
         //Y轴上的数据画笔
         yDataPaint = new Paint();
         yDataPaint.setAntiAlias(true);
-        yDataPaint.setTextSize(DensityUtils.sp2px(mContext,defaultTextSize));
-        yDataPaint.setColor(mContext.getResources().getColor(defaultColor));
+        yDataPaint.setTextSize(defaultTextSize);
+        yDataPaint.setColor(defaultColor);
 
-        //图片画笔
-        bitmapPaint = new Paint();
+        //点击之后的画笔
+        clickPaint = new Paint();
 
     }
 
@@ -280,9 +308,9 @@ public class LineChartView extends View {
         //Y轴lable文字宽度
         yLableWidth = yTextLablePaint.measureText(yLableText);
         //X轴lable文字高度
-        float xLableHeight = getFontHeight(xTextLablePaint) + DensityUtils.dip2px(mContext,marginHeight);
+        xLableHeight = getFontHeight(xTextLablePaint) + DensityUtils.dip2px(mContext,axisMarginHeight);
         //y轴的长度
-        yLength = DensityUtils.dip2px(mContext,viewHeight-marginHeight-xLableHeight);
+        yLength = DensityUtils.dip2px(mContext,viewHeight-axisMarginHeight- xLableHeight);
         startX = getPaddingLeft();
         //起点坐标空出点画Y轴label
         startY = getPaddingTop();
@@ -293,7 +321,13 @@ public class LineChartView extends View {
         firstDataWidth = yDataPaint.measureText(String.valueOf(mList.get(0).getValue()))+ DensityUtils.dip2px(mContext,pointMarginHeight);
         startPointX = startX + xMarginWidth;
         //Y轴起始坐标
-        startPointY = startY + getFontHeight(yTextLablePaint)+DensityUtils.dip2px(mContext,marginHeight) +yLength;
+        startPointY = startY + getFontHeight(yTextLablePaint)+DensityUtils.dip2px(mContext,axisMarginHeight) +yLength;
+
+        //图片的宽度和高度
+        bitmapHeight = getFontHeight(yDataPaint)+ DensityUtils.dip2px(mContext,textAndPicMargin);
+        bitmapWidth = yDataPaint.measureText(mList.get(0).getValue())+ DensityUtils.dip2px(mContext,textAndPicMargin);
+        //点上文字的高度
+        yDataHeight = getFontHeight(yDataPaint);
     }
 
     /**
@@ -313,7 +347,7 @@ public class LineChartView extends View {
         }
         for(int i = 0;i<mList.size();i++){
             //将所有的值根据高度均分(如果需要显示点击之后的popwindow,可以加上popwindow的高度，如果不需要，可以去掉，或者设置为0)
-            averHeight = (yLength - DensityUtils.dip2px(mContext,pointMarginHeight))/max;
+            averHeight = (yLength - DensityUtils.dip2px(mContext,pointMarginHeight)-bitmapHeight/2+yDataHeight/2)/max;
             mList.get(i).setyAxis(startPointY - averHeight * Float.parseFloat(mList.get(i).getValue()));
         }
     }
@@ -361,9 +395,9 @@ public class LineChartView extends View {
             if(isClick&&clickIndex==i){
                 yDataPaint.setColor(Color.WHITE);
             }else{
-                yDataPaint.setColor(mContext.getResources().getColor(defaultColor));
+                yDataPaint.setColor(defaultColor);
             }
-            canvas.drawText(String.valueOf(mList.get(i).getValue()),mList.get(i).getxAxis()- yDataWidth /2,mList.get(i).getyAxis()-DensityUtils.dip2px(mContext,30),yDataPaint);
+            canvas.drawText(String.valueOf(mList.get(i).getValue()),mList.get(i).getxAxis()- yDataWidth /2,mList.get(i).getyAxis()-DensityUtils.dip2px(mContext,pointMarginHeight),yDataPaint);
 
         }
     }
@@ -374,7 +408,7 @@ public class LineChartView extends View {
      */
     private void drawYLable(Canvas canvas){
         float yLableTextWidth = yTextLablePaint.measureText(yLableText);
-        canvas.drawText(yLableText,startPointX-yLableTextWidth/2,startY+DensityUtils.dip2px(mContext,pointMarginHeight),yTextLablePaint);
+        canvas.drawText(yLableText,startPointX-yLableTextWidth/2,startPointY-yLength-DensityUtils.dip2px(mContext,axisMarginHeight),yTextLablePaint);
     }
 
     /**
@@ -394,12 +428,13 @@ public class LineChartView extends View {
             float xLableWidth = xTextLablePaint.measureText(mList.get(i).getDate());
             if(isClick&&clickIndex==i){
                 //点击之后改变xlable文字颜色
-                xTextLablePaint.setColor(mContext.getResources().getColor(defaultColor));
+                xTextLablePaint.setColor(defaultColor);
             }else{
                 //默认颜色
-                xTextLablePaint.setColor(mContext.getResources().getColor(xLableTextColor));
+                xTextLablePaint.setColor(xLableTextColor);
             }
-            canvas.drawText(mList.get(i).getDate(),startPointX-xLableWidth/2+i*xLength,startPointY+DensityUtils.dip2px(mContext,pointMarginHeight),xTextLablePaint);
+            canvas.drawText(mList.get(i).getDate(),startPointX-xLableWidth/2+i*xLength,startPointY+getFontHeight(xTextLablePaint)+DensityUtils.dip2px(mContext,axisMarginHeight)
+                    ,xTextLablePaint);
         }
     }
 
@@ -445,7 +480,7 @@ public class LineChartView extends View {
     private void drawDataLines(Canvas canvas) {
         getPointRoords();
         for (int i = 0; i < mList.size(); i++) {
-            mDataLinePaint.setColor(mContext.getResources().getColor(defaultColor));
+            mDataLinePaint.setColor(defaultColor);
             //最后一个点就不用再画连线了
             if(i == mList.size()-1)return;
             canvas.drawLine(mList.get(i).getxAxis(),mList.get(i).getyAxis(),mList.get(i+1).getxAxis(), mList.get(i+1).getyAxis(), mDataLinePaint);
@@ -463,10 +498,10 @@ public class LineChartView extends View {
             if (isClick&&clickIndex == i) {
                 //绘制白色背景
                 canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(), pointDefaultRadius+DensityUtils.dip2px(mContext,2), transparentPaint);
-                pointSelectedPaint.setColor(mContext.getResources().getColor(defaultColor));
+                pointSelectedPaint.setColor(defaultColor);
                 //绘制外层圆环
                 canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(),pointDefaultRadius+DensityUtils.dip2px(mContext,2), pointSelectedPaint);
-                pointPaint.setColor(mContext.getResources().getColor(defaultColor));
+                pointPaint.setColor(defaultColor);
                 pointPaint.setStyle(Paint.Style.FILL);
                 pointPaint.setStrokeWidth(defaultStrokeWidth);
                 //绘制点击之后圆点的小圆
@@ -475,7 +510,7 @@ public class LineChartView extends View {
             }else{
                 //绘制白色背景
                 canvas.drawCircle(mList.get(i).getxAxis(),mList.get(i).getyAxis(), pointDefaultRadius, transparentPaint);
-                pointPaint.setColor(mContext.getResources().getColor(defaultColor));
+                pointPaint.setColor(defaultColor);
                 pointPaint.setStrokeWidth(defaultStrokeWidth);
                 pointPaint.setStyle(Paint.Style.STROKE);
                 //绘制圆环
@@ -488,17 +523,22 @@ public class LineChartView extends View {
      * 点击数据点后，展示详细的数据值
      */
     private void showClick(int index,Canvas canvas) {
-        float height = getFontHeight(yDataPaint)+DensityUtils.dip2px(mContext,pointMarginHeight);
-        float width = yDataPaint.measureText(mList.get(index).getValue())+DensityUtils.dip2px(mContext,pointMarginHeight);
         bitmap = BitmapFactory.decodeResource(getResources(),showPicResource);
-        resizeBitmap = resizeBitmap(bitmap, firstDataWidth, height);
-        Log.d("第一个点的坐标：",mList.get(index).getxAxis()+"");
-        //因为图片下边有个尖角，所以间隔会有一点点变化
-        RectF rect1 = new RectF(mList.get(index).getxAxis()-width/2,
-                mList.get(index).getyAxis()-height-DensityUtils.dip2px(mContext,marginHeight),
-                mList.get(index).getxAxis()+width/2,
-                mList.get(index).getyAxis()-DensityUtils.dip2px(mContext,18));
-        canvas.drawBitmap(resizeBitmap,null,rect1,bitmapPaint);
+        resizeBitmap = resizeBitmap(bitmap, bitmapWidth, bitmapHeight);
+        //计算区域
+        RectF rect1 = new RectF(mList.get(index).getxAxis()-bitmapWidth/2,
+                mList.get(index).getyAxis()-bitmapHeight/2-DensityUtils.dip2px(mContext,pointMarginHeight),
+                mList.get(index).getxAxis()+bitmapWidth/2,
+                mList.get(index).getyAxis()-DensityUtils.dip2px(mContext,pointMarginHeight+textAndPicMargin/2)+bitmapHeight/2);
+        switch (drawType){
+            case DrawBackground:
+                clickPaint.setColor(clickBgColor);
+                canvas.drawRect(rect1,clickPaint);
+                break;
+            case DrawBitmap:
+                canvas.drawBitmap(resizeBitmap,null,rect1,clickPaint);
+                break;
+        }
     }
 
     /**

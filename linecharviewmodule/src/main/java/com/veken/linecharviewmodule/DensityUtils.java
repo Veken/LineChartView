@@ -1,4 +1,4 @@
-package com.veken.linechartview;
+package com.veken.linecharviewmodule;
 
 import android.content.Context;
 
