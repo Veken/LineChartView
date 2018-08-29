@@ -1,7 +1,7 @@
 # LineChartView
 <br>
-## Introduction
-</br>
+##  Introduction
+
 &nbsp;&nbsp;&nbsp;&nbsp;LineChartView这是一个关于Android折线图的开源图表库。目前仅支持折线图，点击之后的状态变化，可以选择是画一个图片还是一个背景框。<br>
 
 ## 效果图
