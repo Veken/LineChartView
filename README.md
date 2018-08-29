@@ -1,9 +1,10 @@
 # LineChartView
 <br>
 ## Introduction
-&nbsp;&nbsp;&nbsp;&nbsp;LineChartView这是一个关于折线图的自定义view。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;LineChartView这是一个关于Android折线图的开源图表库。目前仅支持折线图，点击之后的状态变化，可以选择是画一个图片还是一个背景框。<br>
 
-## Version
+## 效果图
+![](https://github.com/Veken/LineChartView/raw/master/image/linechartview.gif)
 
 ## Usage
 
@@ -15,10 +16,6 @@
 	        compile 'com.veken:linechartview:1.0.0'
 	}
 ```
-
-
-
-以组合图表为例
 ### XML
 ```XML
   <com.veken.linecharviewmodule.LineChartView
@@ -34,21 +31,33 @@
 ```
 ### Java
 ```Java
-
+ LineChartView chartView = findViewById(R.id.chart_view);;
+ chartView.setDefaultTextSize(24);
+ chartView.setyLableText("分钟");
+ //画的种类，目前仅支持图片和一个背景框
+ chartView.setDrawType(DrawType.DrawBackground);
 ```
 ### Data
 ```Java
-
+private List<LineChartBean> mList;
+if(mList==null){
+	mList = new ArrayList<>();
+}
 ```
-
 ```Java
-
+Random random = new Random();
+for(int i=0;i<7;i++){
+	LineChartBean lineChartBean = new LineChartBean();
+	lineChartBean.setValue(String.valueOf(random.nextInt(10000)));
+	lineChartBean.setDate(String.valueOf(i));
+	mList.add(lineChartBean);
+}
 ```
 
 
 ## License
 ```
-Copyright (C) 2016 Idtk
+Copyright (C) 2018 Idtk
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -70,7 +79,5 @@ limitations under the License.
 
 
 
-
-![](https://github.com/Veken/LineChartView/raw/master/image/linechartview.gif)
 
 
