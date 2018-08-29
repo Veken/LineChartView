@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        chartView = findViewById(R.id.chart_view_1);
+        chartView = findViewById(R.id.chart_view);
         setData();
     }
 
@@ -32,11 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
         for(int i=0;i<7;i++){
             LineChartBean lineChartBean = new LineChartBean();
-            if(i==0||i==6){
-                lineChartBean.setValue("10000");
-            }else{
-                lineChartBean.setValue(String.valueOf(random.nextInt(10000)));
-            }
+            lineChartBean.setValue(String.valueOf(random.nextInt(10000)));
             lineChartBean.setDate(String.valueOf(i));
             mList.add(lineChartBean);
         }

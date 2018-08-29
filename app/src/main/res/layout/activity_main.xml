@@ -7,7 +7,7 @@
     android:background="#ffff">
 
         <com.veken.linecharviewmodule.LineChartView
-            android:id="@+id/chart_view_1"
+            android:id="@+id/chart_view"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:showPicResource="@mipmap/ic_launcher"
