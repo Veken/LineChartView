@@ -2,8 +2,7 @@
 <br>
 ## Introduction
 </br>
-&nbsp;&nbsp;&nbsp;&nbsp;LineChartView是一个关于Android折线图的开源图表库。目前仅支持折线图，点击之后的状态变化，可以选择是画一个图片还是一个背景框。<br>
-
+LineChartView是一个关于Android折线图的开源图表库。目前仅支持折线图，点击之后的状态变化，可以选择是画一个图片还是一个背景框。<br>
 ## Screens
 ![](https://github.com/Veken/LineChartView/raw/master/image/linechartview.gif)
 
@@ -58,7 +57,7 @@ for(int i=0;i<7;i++){
 
 ## License
 ```
-Copyright (C) 2018 Idtk
+Copyright (C) 2018 
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
