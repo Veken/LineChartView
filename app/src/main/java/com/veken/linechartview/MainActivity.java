@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
         }
         chartView.setData(mList);
         chartView.setyLableText("分钟");
-        chartView.setDrawType(DrawType.DrawBitmap);
-        chartView.setClickable(false);
-        chartView.setNeedBg(false);
-        chartView.setShowPicResource(R.mipmap.ic_launcher);
+        chartView.setDrawType(DrawType.DrawBackground);
+        chartView.setClickBgColor(R.color.colorAccent);
+        chartView.setClickable(true);
+        chartView.setNeedBg(true);
     }
 
     @Override
