@@ -6,9 +6,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ComposeShader;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
+import android.graphics.Shader;
+import android.graphics.SweepGradient;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -60,6 +66,7 @@ public class LineChartView extends View {
     private Paint yDataPaint;
     //图片画笔
     private Paint clickPaint;
+    private Paint bgPaint;
 
     //文字和X轴Y轴高度间隔
     private int axisMarginHeight;
@@ -88,8 +95,18 @@ public class LineChartView extends View {
     //点击之后的背景颜色
     private int clickBgColor;
 
+    private  int startColor;
+    private  int endColor;
+    private int[] mColors;
+
     private boolean isClick;                // 是否点击了数据点
     private int clickIndex = -1;            // 被点击的数据点的索引值
+
+
+    //是否需要点击事件
+    private boolean clickable;
+    //是否需要背景
+    private boolean isNeedBg;
 
     //画的种类
     private DrawType drawType;
@@ -105,6 +122,8 @@ public class LineChartView extends View {
     private float bitmapWidth;
     private float yDataHeight;
     private float xLableHeight;
+
+    private Path bgPath;
 
 
     public int getClickBgColor() {
@@ -205,6 +224,24 @@ public class LineChartView extends View {
         this.drawType = drawType;
     }
 
+    @Override
+    public boolean isClickable() {
+        return clickable;
+    }
+
+    @Override
+    public void setClickable(boolean clickable) {
+        this.clickable = clickable;
+    }
+
+    public boolean isNeedBg() {
+        return isNeedBg;
+    }
+
+    public void setNeedBg(boolean needBg) {
+        isNeedBg = needBg;
+    }
+
     public LineChartView(Context context) {
         this(context,null);
     }
@@ -230,6 +267,13 @@ public class LineChartView extends View {
         axisColor = typedValue.getColor(R.styleable.LineChartView_axisColor,0XFF99989d);
         textAndPicMargin = typedValue.getDimensionPixelSize(R.styleable.LineChartView_textAndPicMargin,20);
         clickBgColor = typedValue.getColor(R.styleable.LineChartView_clickBgColor,0XFF5287F7);
+        startColor = typedValue.getColor(R.styleable.LineChartView_startColor,0X20BFEFFF);
+        endColor = typedValue.getColor(R.styleable.LineChartView_endColor,0XFF5287F7);
+        clickable = typedValue.getBoolean(R.styleable.LineChartView_clickable,true);
+        isNeedBg = typedValue.getBoolean(R.styleable.LineChartView_isNeedBg,true);
+        mColors = new int[2];
+        mColors[0] = startColor;
+        mColors[1] = endColor;
         init();
     }
 
@@ -287,6 +331,11 @@ public class LineChartView extends View {
 
         //点击之后的画笔
         clickPaint = new Paint();
+
+        bgPath = new Path();
+
+        bgPaint = new Paint();
+        bgPaint.setAntiAlias(true);
 
     }
 
@@ -368,21 +417,46 @@ public class LineChartView extends View {
         drawYLable(canvas);
         //画数据圆点之间的连线
         drawDataLines(canvas);
+        //画X轴标签
+        drawXLable(canvas);
+        // 绘制背景色块
+        if(isNeedBg){
+            drawBgColor(canvas);
+        }
         //画X轴
         drawXLine(canvas);
         //画Y轴
         drawYLine(canvas);
-        //画X轴标签
-        drawXLable(canvas);
-        if(isClick){
+        //点击之后状态
+        if(isClick&&clickable){
             showClick(clickIndex,canvas);
         }
         //画Y轴上的数值
         drawYData(canvas);
         //画数据圆点
         drawDataPoints(canvas);
-//        drawBgColor();              // 绘制背景色块
 
+
+    }
+
+    /**
+     * 画背景颜色
+     * @param canvas
+     */
+    private void drawBgColor(Canvas canvas) {
+        LinearGradient hrLg = new LinearGradient(startPointX, startPointY, mList.get(0).getxAxis(),mList.get(0).getyAxis(), startColor,endColor, Shader.TileMode.CLAMP);
+        //设置垂直透明度渐变,起点坐标(x是图表中心,y是最高点的纵坐标,其值最小),终点坐标(x是图表中心,y是最低点的纵坐标,其值最大)
+//        float x = yLength / 2;
+//        LinearGradient vtLg = new LinearGradient(x, 0, x, getHeight(),startColor, endColor, Shader.TileMode.CLAMP);
+//        Shader composeShader = new ComposeShader(hrLg, vtLg, PorterDuff.Mode.MULTIPLY);
+        bgPath.moveTo(startPointX,startPointY);
+        for(int i = 0;i<mList.size();i++){
+            bgPath.lineTo(mList.get(i).getxAxis(),mList.get(i).getyAxis());
+        }
+        bgPath.lineTo(mList.get(mList.size()-1).getxAxis(),startPointY);
+        bgPath.close();
+        bgPaint.setShader(hrLg);
+        canvas.drawPath(bgPath,bgPaint);
     }
 
     /**
@@ -392,7 +466,7 @@ public class LineChartView extends View {
     private void drawYData(Canvas canvas) {
         for(int i = 0;i<mList.size();i++){
             yDataWidth = yDataPaint.measureText(String.valueOf(mList.get(i).getValue()));
-            if(isClick&&clickIndex==i){
+            if(isClick&&clickIndex==i&&clickable){
                 yDataPaint.setColor(Color.WHITE);
             }else{
                 yDataPaint.setColor(defaultColor);
@@ -426,7 +500,7 @@ public class LineChartView extends View {
     private void drawXLable(Canvas canvas){
         for (int i = 0;i<mList.size();i++){
             float xLableWidth = xTextLablePaint.measureText(mList.get(i).getDate());
-            if(isClick&&clickIndex==i){
+            if(isClick&&clickIndex==i&&clickable){
                 //点击之后改变xlable文字颜色
                 xTextLablePaint.setColor(defaultColor);
             }else{
@@ -495,7 +569,7 @@ public class LineChartView extends View {
     private void drawDataPoints(Canvas canvas) {
         for(int i = 0;i<mList.size();i++){
             // 点击后，绘制数据点
-            if (isClick&&clickIndex == i) {
+            if (isClick&&clickIndex == i&&clickable) {
                 //绘制白色背景
                 canvas.drawCircle(mList.get(clickIndex).getxAxis(),mList.get(clickIndex).getyAxis(), pointDefaultRadius+DensityUtils.dip2px(mContext,2), transparentPaint);
                 pointSelectedPaint.setColor(defaultColor);
@@ -526,17 +600,17 @@ public class LineChartView extends View {
         bitmap = BitmapFactory.decodeResource(getResources(),showPicResource);
         resizeBitmap = resizeBitmap(bitmap, bitmapWidth, bitmapHeight);
         //计算区域
-        RectF rect1 = new RectF(mList.get(index).getxAxis()-bitmapWidth/2,
+        RectF rect = new RectF(mList.get(index).getxAxis()-bitmapWidth/2,
                 mList.get(index).getyAxis()-bitmapHeight/2-DensityUtils.dip2px(mContext,pointMarginHeight),
                 mList.get(index).getxAxis()+bitmapWidth/2,
                 mList.get(index).getyAxis()-DensityUtils.dip2px(mContext,pointMarginHeight+textAndPicMargin/2)+bitmapHeight/2);
         switch (drawType){
             case DrawBackground:
                 clickPaint.setColor(clickBgColor);
-                canvas.drawRect(rect1,clickPaint);
+                canvas.drawRect(rect,clickPaint);
                 break;
             case DrawBitmap:
-                canvas.drawBitmap(resizeBitmap,null,rect1,clickPaint);
+                canvas.drawBitmap(resizeBitmap,null,rect,clickPaint);
                 break;
         }
     }

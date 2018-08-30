@@ -7,6 +7,6 @@
     <color name="ylable_textColor">#99989d</color>
     <color name="default_color">#5287F7</color>
     <color name="axisColor">#26000000</color>
-    <color name="ALPHA_START_COLOR">#33ffffff</color>
-    <color name="ALPHA_END_COLOR">#00ffffff</color>
+    <color name="startColor">#5e70b6f7</color>
+    <color name="endColor">#7EC0EE</color>
 </resources>

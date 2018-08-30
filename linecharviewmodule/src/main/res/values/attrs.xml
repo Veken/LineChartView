@@ -14,5 +14,9 @@
         <attr name="xLableTextColor" format="color"/>
         <attr name="axisColor" format="color"/>
         <attr name="clickBgColor" format="color"/>
+        <attr name="startColor" format="color"/>
+        <attr name="endColor" format="color"/>
+        <attr name="clickable" format="boolean"/>
+        <attr name="isNeedBg" format="boolean"/>
     </declare-styleable>
 </resources>
