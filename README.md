@@ -12,20 +12,24 @@ LineChartView是一个关于Android折线图的开源图表库。目前仅支持
 
 ```
     dependencies {
-	        compile 'com.veken:linechartview:1.0.0'
+	        compile 'com.veken:linechartview:1.0.1'
 	}
 ```
 ### XML
 ```XML
   <com.veken.linecharviewmodule.LineChartView
-            android:id="@+id/chart_view_1"
+            android:id="@+id/chart_view"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:showPicResource="@mipmap/ic_launcher"
             app:defaultStrokeWidth="0.5dp"
             app:pointClickRadius="3dp"
             app:defaultTextSize="16sp"
-            app:pointDefaultRadius="2dp" />
+            app:pointDefaultRadius="2dp"
+            app:isNeedBg="true"
+            app:clickable="true"
+            app:startColor="@color/startColor"
+            app:endColor="@color/endColor" />
 
 ```
 ### Java
@@ -33,6 +37,8 @@ LineChartView是一个关于Android折线图的开源图表库。目前仅支持
  LineChartView chartView = findViewById(R.id.chart_view);;
  chartView.setDefaultTextSize(24);
  chartView.setyLableText("分钟");
+ chartView.setClickable(true);
+ chartView.setNeedBg(true);
  //画的种类，目前仅支持图片和一个背景框
  chartView.setDrawType(DrawType.DrawBackground);
 ```
