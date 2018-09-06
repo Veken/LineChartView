@@ -2,5 +2,7 @@ package com.veken.linecharviewmodule;
 
 public enum  DrawType {
     DrawBitmap,
-    DrawBackground
+    DrawBackground,
+    DrawFullLine,
+    DrawDottedLine
 }

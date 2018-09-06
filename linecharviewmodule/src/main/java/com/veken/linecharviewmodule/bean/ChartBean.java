@@ -1,4 +1,4 @@
-package com.veken.linecharviewmodule;
+package com.veken.linecharviewmodule.bean;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * @desc
  */
 
-public class LineChartBean {
+public class ChartBean {
 
     //坐标点上的数据
     private String date;

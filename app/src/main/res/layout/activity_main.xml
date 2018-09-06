@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#ffff">
 
-        <com.veken.linecharviewmodule.LineChartView
+        <com.veken.linecharviewmodule.view.LineChartView
             android:id="@+id/chart_view"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:showPicResource="@mipmap/ic_launcher"
-            app:defaultStrokeWidth="0.5dp"
-            app:pointClickRadius="3dp"
-            app:defaultTextSize="16sp"
-            app:pointDefaultRadius="2dp"
             app:isNeedBg="true"
             app:clickable="true"
             app:startColor="@color/startColor"
             app:endColor="@color/endColor"/>
 
-</RelativeLayout>
+        <com.veken.linecharviewmodule.view.BarCharView
+            android:id="@+id/barchar_view"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="300dp" />
+
+</LinearLayout>
