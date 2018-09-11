@@ -114,6 +114,7 @@ axisXItemWidth | 每一个Item的宽度
 axisXItemMargin | Item之间的间隔
 isNeedDrawYScale | 是否需要画Y轴的刻度
 bgColor | 柱状图背景颜色
+其他同折线图
 
 ### Java
 ```
