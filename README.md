@@ -3,7 +3,7 @@
 ChartView是一个Android开源图表库。目前仅支持折线图，曲线图，柱状图，以及点击之后的状态变化，可以选择是画一个图片还是一个背景框。
 
 ### Screens
-![](https://github.com/Veken/LineChartView/raw/master/image/linechartview.gif)</br>
+![](https://github.com/Veken/LineChartView/raw/master/image/chartview.gif)</br>
 
 ## Usage
 
