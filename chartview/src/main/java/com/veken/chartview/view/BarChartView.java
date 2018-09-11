@@ -1,27 +1,23 @@
-package com.veken.linecharviewmodule.view;
+package com.veken.chartview.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
-import com.veken.linecharviewmodule.DensityUtils;
-import com.veken.linecharviewmodule.DrawType;
+import com.veken.chartview.bean.ChartBean;
+import com.veken.chartview.DensityUtils;
+import com.veken.chartview.drawtype.DrawConnectLineType;
 import com.veken.linecharviewmodule.R;
-import com.veken.linecharviewmodule.bean.ChartBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BarCharView extends View {
+public class BarChartView extends View {
 
     private float xLength;
     private float yLength;
@@ -73,8 +69,12 @@ public class BarCharView extends View {
     //是否需要背景
     private boolean isNeedBg;
 
+
+    //是否需要画Y轴刻度
+    private boolean isNeedDrawYScale;
+
     //画实线还是虚线
-    private DrawType drawType;
+    private DrawConnectLineType drawConnectLineType;
     //是否需要Y轴数据对应的线
     private boolean isNeedDrawConnectYDataLine;
 
@@ -101,12 +101,12 @@ public class BarCharView extends View {
         this.connectLineColor = connectLineColor;
     }
 
-    public DrawType getDrawType() {
-        return drawType;
+    public DrawConnectLineType getDrawConnectLineType() {
+        return drawConnectLineType;
     }
 
-    public void setDrawType(DrawType drawType) {
-        this.drawType = drawType;
+    public void setDrawConnectLineType(DrawConnectLineType drawConnectLineType) {
+        this.drawConnectLineType = drawConnectLineType;
     }
 
     public int getDottedLineWidth() {
@@ -133,6 +133,13 @@ public class BarCharView extends View {
         isNeedDrawConnectYDataLine = needDrawConnectYDataLine;
     }
 
+    public boolean isNeedDrawYScale() {
+        return isNeedDrawYScale;
+    }
+
+    public void setNeedDrawYScale(boolean needDrawYScale) {
+        isNeedDrawYScale = needDrawYScale;
+    }
 
     public int getDefaultTextSize() {
         return defaultTextSize;
@@ -183,32 +190,33 @@ public class BarCharView extends View {
         this.defaultStrokeWidth = defaultStrokeWidth;
     }
 
-    public BarCharView(Context context) {
+    public BarChartView(Context context) {
         this(context,null);
     }
 
-    public BarCharView(Context context, @Nullable AttributeSet attrs) {
+    public BarChartView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs,0);
     }
 
-    public BarCharView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BarChartView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        TypedArray typedValue = context.obtainStyledAttributes(attrs,R.styleable.BarCharView);
-        axisMarginHeight =  typedValue.getDimensionPixelSize(R.styleable.BarCharView_marginHeight,DensityUtils.dip2px(mContext,10));
-        defaultTextSize = typedValue.getDimensionPixelSize(R.styleable.BarCharView_defaultTextSize,DensityUtils.sp2px(mContext,14));
-        yLableTextColor = typedValue.getColor(R.styleable.BarCharView_yLableTextColor,0XFF99989d);
-        defaultColor = typedValue.getColor(R.styleable.BarCharView_yLableTextColor,0XFF5287F7);
-        xLableTextColor = typedValue.getColor(R.styleable.BarCharView_xLableTextColor,0XFF99989d);
-        axisColor = typedValue.getColor(R.styleable.BarCharView_axisColor,0XFF99989d);
-        isNeedBg = typedValue.getBoolean(R.styleable.BarCharView_isNeedBg,true);
-        yLableText = typedValue.getString(R.styleable.BarCharView_yLableText);
-        axisXItemWidth = typedValue.getDimensionPixelSize(R.styleable.BarCharView_axisXItemWidth, DensityUtils.dip2px(mContext,20));
+        TypedArray typedValue = context.obtainStyledAttributes(attrs,R.styleable.BarChartView);
+        axisMarginHeight =  typedValue.getDimensionPixelSize(R.styleable.BarChartView_axisMarginHeight,DensityUtils.dip2px(mContext,10));
+        defaultTextSize = typedValue.getDimensionPixelSize(R.styleable.BarChartView_defaultTextSize,DensityUtils.sp2px(mContext,14));
+        yLableTextColor = typedValue.getColor(R.styleable.BarChartView_yLableTextColor,0XFF99989d);
+        defaultColor = typedValue.getColor(R.styleable.BarChartView_yLableTextColor,0XFF5287F7);
+        xLableTextColor = typedValue.getColor(R.styleable.BarChartView_xLableTextColor,0XFF99989d);
+        axisColor = typedValue.getColor(R.styleable.BarChartView_axisColor,0XFF99989d);
+        isNeedBg = typedValue.getBoolean(R.styleable.BarChartView_isNeedBg,true);
+        yLableText = typedValue.getString(R.styleable.BarChartView_yLableText);
+        axisXItemWidth = typedValue.getDimensionPixelSize(R.styleable.BarChartView_axisXItemWidth, DensityUtils.dip2px(mContext,20));
         defaultStrokeWidth = typedValue.getDimensionPixelSize(R.styleable.LineChartView_defaultStrokeWidth,DensityUtils.dip2px(mContext,1));
-        bgColor = typedValue.getColor(R.styleable.BarCharView_bgColor,0XFF5287F7);
-        isNeedDrawConnectYDataLine = typedValue.getBoolean(R.styleable.BarCharView_isNeedDrawConnectYDataLine,false);
-        connectLineColor = typedValue.getColor(R.styleable.BarCharView_connectLineColor,0XFF5287F7);
-        dottedLineWidth = typedValue.getDimensionPixelSize(R.styleable.BarCharView_dottedLineWidth,DensityUtils.dip2px(mContext,3));
+        bgColor = typedValue.getColor(R.styleable.BarChartView_bgColor,0XFF5287F7);
+        isNeedDrawConnectYDataLine = typedValue.getBoolean(R.styleable.BarChartView_isNeedDrawConnectYDataLine,false);
+        connectLineColor = typedValue.getColor(R.styleable.BarChartView_connectLineColor,0XFF5287F7);
+        dottedLineWidth = typedValue.getDimensionPixelSize(R.styleable.BarChartView_dottedLineWidth,DensityUtils.dip2px(mContext,3));
+        isNeedDrawYScale = typedValue.getBoolean(R.styleable.BarChartView_isNeedDrawYScale,false);
         init();
     }
 
@@ -267,7 +275,7 @@ public class BarCharView extends View {
         //Y轴lable文字宽度
         yLableWidth = yTextLablePaint.measureText(yLableText);
         //X轴lable文字高度
-        xLableHeight = getFontHeight(xTextLablePaint) + DensityUtils.dip2px(mContext,axisMarginHeight);
+        xLableHeight = DensityUtils.getFontHeight(xTextLablePaint,mList.get(0).getDate()) + DensityUtils.dip2px(mContext,axisMarginHeight);
         //y轴的长度
         yLength = DensityUtils.dip2px(mContext,viewHeight-axisMarginHeight- xLableHeight);
         startX = getPaddingLeft();
@@ -277,13 +285,21 @@ public class BarCharView extends View {
         xMarginWidth = yLableWidth >firstDataWidth? yLableWidth /2: firstDataWidth/2;
         //每一个X轴点之间的长度
         xLength = (viewWidth-xMarginWidth) / mList.size();
-        firstDataWidth = yDataPaint.measureText(String.valueOf(mList.get(0).getValue()))+ DensityUtils.dip2px(mContext,axisMarginHeight);
-        startPointX = startX + xMarginWidth;
+        float maxWidth = yDataPaint.measureText(String.valueOf(mList.get(0).getValue()));
+        float currentWidth = 0;
+        for (int i = 0; i <mList.size() ; i++) {
+            currentWidth = yDataPaint.measureText(String.valueOf(mList.get(i).getValue()));
+            if(maxWidth<currentWidth){
+                maxWidth = currentWidth;
+            }
+        }
+        firstDataWidth = maxWidth+ DensityUtils.dip2px(mContext,axisMarginHeight);
+        startPointX = startX + firstDataWidth;
         //Y轴起始坐标
-        startPointY = startY + getFontHeight(yTextLablePaint)+DensityUtils.dip2px(mContext,axisMarginHeight) +yLength;
+        startPointY = startY +DensityUtils.getFontHeight(yTextLablePaint,yLableText)+DensityUtils.dip2px(mContext,axisMarginHeight) +yLength;
 
         //点上文字的高度
-        yDataHeight = getFontHeight(yDataPaint);
+        yDataHeight = DensityUtils.getFontHeight(yTextLablePaint,mList.get(0).getValue());
 
         //获取数据点的坐标
         getPointRoords();
@@ -339,6 +355,19 @@ public class BarCharView extends View {
         if(isNeedDrawConnectYDataLine){
             drawConnectYDataLine(canvas);
         }
+        //是否需要画Y轴的刻度
+        if(isNeedDrawYScale){
+            drawYScale(canvas);
+        }
+    }
+
+    private void drawYScale(Canvas canvas) {
+        //所有文字的高度都是一致的
+        float textHeight = DensityUtils.getFontHeight(yTextLablePaint,mList.get(0).getValue());//文字高
+        for (int i = 0; i < mList.size(); i++) {
+            float yValueWidth = yTextLablePaint.measureText(mList.get(i).getValue());
+            canvas.drawText(mList.get(i).getValue(),startPointX-yValueWidth-DensityUtils.dip2px(mContext,5),mList.get(i).getyAxis()+textHeight/2,yTextLablePaint);
+        }
     }
 
     /**
@@ -348,10 +377,10 @@ public class BarCharView extends View {
     private void drawConnectYDataLine(Canvas canvas) {
         mScaleLinePaint.setColor(connectLineColor);
         for (int i = 1; i <mList.size() ; i++) {
-            if(drawType==DrawType.DrawFullLine){
+            if(drawConnectLineType == DrawConnectLineType.DrawFullLine){
                 //实线
                 canvas.drawLine(startPointX,mList.get(i).getyAxis(),mList.get(i).getxAxis(),mList.get(i).getyAxis(),mScaleLinePaint);
-            }else if(drawType == DrawType.DrawDottedLine){
+            }else if(drawConnectLineType == DrawConnectLineType.DrawDottedLine){
                 //虚线
                 //虚线
                 float x = mList.get(i).getxAxis()-axisXItemWidth - startPointX;
@@ -362,10 +391,14 @@ public class BarCharView extends View {
                 }
                 canvas.drawLine(startPointX+(spaceWidth+dottedLineWidth)*count,mList.get(i).getyAxis(),mList.get(i).getxAxis()-axisXItemWidth,mList.get(i).getyAxis(),mScaleLinePaint);
             }
+
         }
     }
 
-
+    /**
+     * 画柱状图
+     * @param canvas
+     */
     private void drawYBarChart(Canvas canvas) {
         //第一个不画，所以从1开始
         if(isNeedBg){
@@ -408,14 +441,6 @@ public class BarCharView extends View {
         canvas.drawText(yLableText,startPointX-yLableTextWidth/2,startPointY-yLength-DensityUtils.dip2px(mContext,axisMarginHeight),yTextLablePaint);
     }
 
-    /**
-     * @return 返回指定的文字高度
-     */
-    public float getFontHeight(Paint paint) {
-        Paint.FontMetrics fm = paint.getFontMetrics();
-        //文字基准线的下部距离-文字基准线的上部距离 = 文字高度
-        return fm.descent - fm.ascent;
-    }
 
     /**
      *画X轴lable
@@ -425,7 +450,7 @@ public class BarCharView extends View {
             float xLableWidth = xTextLablePaint.measureText(mList.get(i).getDate());
             //默认颜色
             xTextLablePaint.setColor(xLableTextColor);
-            canvas.drawText(mList.get(i).getDate(),startPointX-xLableWidth/2+i*xLength,startPointY+getFontHeight(xTextLablePaint)+DensityUtils.dip2px(mContext,axisMarginHeight)
+            canvas.drawText(mList.get(i).getDate(),startPointX-xLableWidth/2+i*xLength,startPointY+DensityUtils.getFontHeight(xTextLablePaint,mList.get(i).getDate())+DensityUtils.dip2px(mContext,axisMarginHeight)
                     ,xTextLablePaint);
         }
     }

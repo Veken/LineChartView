@@ -1,4 +1,4 @@
-package com.veken.linecharviewmodule.bean;
+package com.veken.chartview.bean;
 
 import java.util.List;
 

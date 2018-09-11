@@ -6,19 +6,20 @@
     <attr name="xLableTextColor" format="color"/>
     <attr name="axisColor" format="color"/>
     <attr name="defaultStrokeWidth" format="dimension"/>
-    <attr name="marginHeight" format="dimension"/>
+    <attr name="axisMarginHeight" format="dimension"/>
     <attr name="yLableText" format="string"/>
     <attr name="isNeedBg" format="boolean"/>
     <attr name="isNeedDrawConnectYDataLine" format="boolean"/>
     <attr name="dottedLineWidth" format="dimension"/>
     <attr name="connectLineColor" format="color"/>
+    <attr name="isNeedDrawYScale" format="boolean"/>
 
     <declare-styleable name="LineChartView">
         <attr name="showPicResource" format="reference"/>
         <attr name="pointMarginHeight" format="dimension"/>
         <attr name="pointDefaultRadius" format="dimension"/>
         <attr name="pointClickRadius" format="dimension"/>
-        <attr name="textAndPicMargin" format="dimension"/>
+        <attr name="textAndClickBgMargin" format="dimension"/>
         <attr name="clickBgColor" format="color"/>
         <attr name="startColor" format="color"/>
         <attr name="endColor" format="color"/>
@@ -30,17 +31,17 @@
         <attr name="xLableTextColor"/>
         <attr name="axisColor"/>
         <attr name="defaultStrokeWidth"/>
-        <attr name="marginHeight"/>
+        <attr name="axisMarginHeight"/>
         <attr name="yLableText"/>
         <attr name="isNeedDrawConnectYDataLine"/>
         <attr name="dottedLineWidth" />
         <attr name="connectLineColor"/>
+
     </declare-styleable>
 
-    <declare-styleable name="BarCharView">
+    <declare-styleable name="BarChartView">
         <attr name="axisXItemWidth" format="dimension"/>
         <attr name="axisXItemMargin" format="dimension"/>
-        <attr name="axisYDataColor" format="color"/>
         <attr name="bgColor" format="color"/>
         <attr name="defaultTextSize"/>
         <attr name="yLableTextColor"/>
@@ -48,12 +49,14 @@
         <attr name="xLableTextColor"/>
         <attr name="axisColor"/>
         <attr name="defaultStrokeWidth"/>
-        <attr name="marginHeight"/>
+        <attr name="axisMarginHeight"/>
         <attr name="yLableText"/>
         <attr name="isNeedBg"/>
         <attr name="isNeedDrawConnectYDataLine"/>
         <attr name="dottedLineWidth"/>
         <attr name="connectLineColor"/>
+        <attr name="isNeedDrawYScale"/>
+
     </declare-styleable>
 
 </resources>

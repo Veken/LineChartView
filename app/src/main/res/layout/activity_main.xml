@@ -6,22 +6,17 @@
     android:orientation="vertical"
     android:background="#ffff">
 
-        <com.veken.linecharviewmodule.view.LineChartView
-            android:id="@+id/chart_view"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:showPicResource="@mipmap/ic_launcher"
-            app:isNeedBg="true"
-            app:clickable="true"
-            app:startColor="@color/startColor"
-            app:endColor="@color/endColor"/>
+            android:layout_height="48dp"
+            android:background="@android:color/white"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabMode="scrollable" />
 
-        <com.veken.linecharviewmodule.view.BarCharView
-            android:id="@+id/barchar_view"
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_height="300dp" />
+            android:layout_height="match_parent" />
 
 </LinearLayout>

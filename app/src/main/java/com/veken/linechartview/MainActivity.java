@@ -1,84 +1,54 @@
 package com.veken.linechartview;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
-import com.veken.linecharviewmodule.DrawType;
-import com.veken.linecharviewmodule.bean.ChartBean;
-import com.veken.linecharviewmodule.view.BarCharView;
-import com.veken.linecharviewmodule.view.LineChartView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LineChartView chartView;
-    private List<ChartBean> lineChartBeanList;
-    private List<ChartBean> barChartBeanList;
-    private BarCharView barCharView;
+    private TabLayout tabLayout;
+    private ViewPager pager;
+    private String[] titles = new String[]{"折线图","柱状图"};
+    List<Fragment> pageFragments = new ArrayList<>();
+    {
+        pageFragments.add(new LineChartFragment());
+        pageFragments.add(new BarChartFragment());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        chartView = findViewById(R.id.chart_view);
-        barCharView = findViewById(R.id.barchar_view);
-        setLineChartData();
-        setBarChartData();
+        pager = findViewById(R.id.pager);
+        pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+
+            @Override
+            public Fragment getItem(int position) {
+                Fragment fragment = pageFragments.get(position);
+                return fragment;
+            }
+
+            @Override
+            public int getCount() {
+                return pageFragments.size();
+            }
+
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return titles[position];
+            }
+        });
+
+        tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(pager);
+
     }
 
-    /**
-     * 柱状图数据
-     */
-    private void setBarChartData() {
-        if(barChartBeanList == null){
-            barChartBeanList = new ArrayList<>();
-        }
-        Random random = new Random();
-        for (int i = 0; i < 7; i++) {
-            ChartBean bean = new ChartBean();
-            bean.setDate(i+"");
-            bean.setValue(i*10+"");
-            barChartBeanList.add(bean);
-        }
-        barCharView.setNeedBg(false);
-        barCharView.setData(barChartBeanList);
-        barCharView.setyLableText("柱状图");
-        barCharView.setNeedDrawConnectYDataLine(true);
-        barCharView.setDrawType(DrawType.DrawDottedLine);
-    }
-
-    /**
-     * 折线图数据
-     */
-    private void setLineChartData() {
-        if(lineChartBeanList==null){
-            lineChartBeanList = new ArrayList<>();
-        }
-        chartView.setDefaultTextSize(24);
-        Random random = new Random();
-        for(int i=0;i<7;i++){
-            ChartBean lineChartBean = new ChartBean();
-            lineChartBean.setValue(String.valueOf(random.nextInt(10000)));
-            lineChartBean.setDate(String.valueOf(i));
-            lineChartBeanList.add(lineChartBean);
-        }
-        chartView.setData(lineChartBeanList);
-        chartView.setyLableText("分钟");
-        chartView.setDrawType(DrawType.DrawBackground);
-        chartView.setClickBgColor(R.color.colorAccent);
-        chartView.setClickable(true);
-        chartView.setNeedBg(true);
-        barCharView.setNeedDrawConnectYDataLine(true);
-        barCharView.setDrawType(DrawType.DrawFullLine);
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        chartView.recycleBitmap();
-    }
 }

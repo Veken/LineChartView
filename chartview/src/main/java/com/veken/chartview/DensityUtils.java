@@ -1,6 +1,8 @@
-package com.veken.linecharviewmodule;
+package com.veken.chartview;
 
 import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.Rect;
 
 /**
  * 屏幕密度计算工具
@@ -58,6 +60,15 @@ public class DensityUtils {
     public static int sp2px(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    /**
+     * @return 返回指定的文字高度
+     */
+    public static float getFontHeight(Paint paint, String text) {
+        Rect rect = new Rect();
+        paint.getTextBounds(text, 0, text.length(), rect);
+        return rect.height();//文字高
     }
 
 

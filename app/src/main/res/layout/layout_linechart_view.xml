@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.veken.chartview.view.LineChartView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/line_chart_view"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:showPicResource="@mipmap/ic_launcher"
+        app:startColor="@color/startColor"
+        app:endColor="@color/endColor"
+        app:isNeedBg="true"
+        app:pointDefaultRadius="2dp"
+        app:connectLineColor="@color/endColor"
+        app:isNeedDrawConnectYDataLine="true"/>
+
+</LinearLayout>
+

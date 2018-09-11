@@ -22,5 +22,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:26.1.0'
-    compile project(':linecharviewmodule')
+    compile 'com.android.support:design:26.1.0'
+//    compile 'com.veken:chart_view:1.0.0'
+    compile project(':chartview')
 }
