@@ -78,6 +78,7 @@ public class LineChartView extends View {
     private int axisMarginHeight;
     //点上的文字和点之间的间隔
     private int pointMarginHeight;
+
     //文字和图片之间的间隔
     private int textAndClickBgMargin;
 
@@ -146,10 +147,6 @@ public class LineChartView extends View {
     private DrawLineType drawLineType = DrawLineType.Draw_Line;
 
     private Path curvePath;
-    private Point startp;
-    private Point endp;
-    private Point p3;
-    private Point p4;
     private RectF rectF;
 
     public DrawLineType getDrawLineType() {
@@ -167,6 +164,14 @@ public class LineChartView extends View {
 //    public void setNeedDrawYScale(boolean needDrawYScale) {
 //        isNeedDrawYScale = needDrawYScale;
 //    }
+
+    public int getTextAndClickBgMargin() {
+        return textAndClickBgMargin;
+    }
+
+    public void setTextAndClickBgMargin(int textAndClickBgMargin) {
+        this.textAndClickBgMargin = textAndClickBgMargin;
+    }
 
     public int getConnectLineColor() {
         return connectLineColor;
@@ -291,15 +296,6 @@ public class LineChartView extends View {
     }
 
 
-    public int gettextAndClickBgMargin() {
-        return textAndClickBgMargin;
-    }
-
-    public void settextAndClickBgMargin(int textAndClickBgMargin) {
-        this.textAndClickBgMargin = textAndClickBgMargin;
-    }
-
-
     @Override
     public boolean isClickable() {
         return clickable;
@@ -418,11 +414,6 @@ public class LineChartView extends View {
 
         //曲线路径
         curvePath = new Path();
-
-        startp = new Point();
-        endp = new Point();
-        p3 = new Point();
-        p4 = new Point();
 
         rectF = new RectF();
     }
@@ -711,9 +702,11 @@ public class LineChartView extends View {
         }
     }
 
-
-    private Path drawCurveLine()
-    {
+    /**
+     * 返回曲线图路径
+     * @return
+     */
+    private Path drawCurveLine() {
         curvePath.reset();
         for (int i = 0; i <mList.size(); i++) {
             if (i != mList.size() - 1) {
