@@ -15,11 +15,12 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager pager;
-    private String[] titles = new String[]{"折线图","柱状图"};
+    private String[] titles = new String[]{"折线图","柱状图","饼状图"};
     List<Fragment> pageFragments = new ArrayList<>();
     {
         pageFragments.add(new LineChartFragment());
         pageFragments.add(new BarChartFragment());
+        pageFragments.add(new PieChartFragment());
     }
 
     @Override

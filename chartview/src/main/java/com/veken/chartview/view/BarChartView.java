@@ -31,7 +31,7 @@ public class BarChartView extends View {
 
 
     //y轴lable文字
-    private String yLableText;
+    private String yLableText = "柱状图";
 
     //画笔
     //坐标轴的画笔

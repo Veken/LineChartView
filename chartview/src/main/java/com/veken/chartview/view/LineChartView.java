@@ -51,7 +51,7 @@ public class LineChartView extends View {
     private int showPicResource = R.mipmap.click_icon;
 
     //y轴lable文字
-    private String yLableText;
+    private String yLableText = "折线图";
 
     //画笔
     //坐标轴的画笔
@@ -500,7 +500,6 @@ public class LineChartView extends View {
         this.mList = list;
     }
 
-    int i = 0;
 
     @Override
     protected void onDraw(Canvas canvas) {

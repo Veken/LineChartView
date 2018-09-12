@@ -64,6 +64,14 @@ public class LineChartFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if(lineChartBeanList!=null&&lineChartBeanList.size()>0){
+            lineChartBeanList.clear();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         lineChartView.recycleBitmap();

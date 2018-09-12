@@ -59,4 +59,9 @@
 
     </declare-styleable>
 
+    <declare-styleable name="PieChartView">
+        <attr name="radius" format="dimension"/>
+        <attr name="textColor" format="color"/>
+    </declare-styleable>
+
 </resources>

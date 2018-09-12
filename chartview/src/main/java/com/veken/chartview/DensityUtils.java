@@ -4,6 +4,9 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 /**
  * 屏幕密度计算工具
  * 计算公式 pixels = dips * (density / 160)
@@ -71,5 +74,13 @@ public class DensityUtils {
         return rect.height();//文字高
     }
 
+    /**
+     *格式化字符串
+     */
+
+    public static String floatFormat(float num){
+        DecimalFormat df = new DecimalFormat("0");
+        return df.format(num);
+    }
 
 }

@@ -54,4 +54,12 @@ public class BarChartFragment extends Fragment {
         barChartView.setNeedDrawYScale(true);
         barChartView.setDrawConnectLineType(DrawConnectLineType.DrawDottedLine);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(barChartBeanList!=null&&barChartBeanList.size()>0){
+            barChartBeanList.clear();
+        }
+    }
 }
