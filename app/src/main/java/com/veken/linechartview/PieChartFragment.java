@@ -1,7 +1,12 @@
 package com.veken.linechartview;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,11 +51,15 @@ public class PieChartFragment extends Fragment {
         Random random = new Random();
         for(int i = 0;i<4;i++){
             PieChartBean pieChartBean = new PieChartBean();
-            pieChartBean.setValue(random.nextInt(100));
+            pieChartBean.setValue(random.nextInt(10)+i);
             pieChartBean.setColor(colors[i]);
             mList.add(pieChartBean);
         }
+
         pieChartView.setData(mList);
+        pieChartView.setInsideText("Hello");
+        pieChartView.setIsNeedAnimation(true,5000);
+        pieChartView.setNeedInside(false);
     }
 
     @Override

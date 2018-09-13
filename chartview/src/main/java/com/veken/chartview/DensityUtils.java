@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 /**
  * 屏幕密度计算工具
@@ -75,12 +74,23 @@ public class DensityUtils {
     }
 
     /**
-     *格式化字符串
+     *格式化字符串,保留两位小数
      */
 
+    public static String float2Format(float num){
+        DecimalFormat df = new DecimalFormat("0.00");
+        return df.format(num);
+    }
+
+    /**
+     * 取整
+     * @param num
+     * @return
+     */
     public static String floatFormat(float num){
         DecimalFormat df = new DecimalFormat("0");
         return df.format(num);
     }
+
 
 }

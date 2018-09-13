@@ -23,6 +23,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support:design:26.1.0'
-//    compile 'com.veken:chart_view:1.0.0'
-    compile project(':chartview')
+    compile 'com.veken:chart_view:1.0.1'
+//    compile project(':chartview')
 }

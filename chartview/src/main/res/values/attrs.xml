@@ -60,8 +60,14 @@
     </declare-styleable>
 
     <declare-styleable name="PieChartView">
-        <attr name="radius" format="dimension"/>
         <attr name="textColor" format="color"/>
+        <attr name="textOutCircleMargin" format="dimension"/>
+        <attr name="isNeedInside" format="boolean"/>
+        <attr name="insideText" format="string"/>
+        <attr name="insideBgColor" format="color"/>
+        <attr name="insideTextSize" format="dimension"/>
+        <attr name="insideTextColor" format="color"/>
+        <attr name="insideRadiusPercent" format="float"/>
     </declare-styleable>
 
 </resources>
