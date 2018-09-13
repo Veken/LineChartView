@@ -4,12 +4,15 @@ ChartView是一个Android开源图表库。目前仅支持折线图，曲线图�
 
 ### Screens
 折线图和曲线图</br>
+
 ![折线图和曲线图](https://github.com/Veken/LineChartView/raw/master/image/chartview.gif)</br>
 
 饼状图有内圆</br>
+
 ![饼状图有内圆](https://github.com/Veken/LineChartView/raw/master/image/piechart_inside.gif)</br>
 
 饼状图没有内圆</br>
+
 ![饼状图没有内圆](https://github.com/Veken/LineChartView/raw/master/image/piechart.gif)</br>
 
 ## Usage
