@@ -3,12 +3,13 @@
 ChartView是一个Android开源图表库。目前仅支持折线图，曲线图，柱状图，饼状图，以及折线图和曲线图点击之后的状态变化，可以选择是画一个图片还是一个背景框。
 
 ### Screens
+折线图和曲线图</br>
 ![折线图和曲线图](https://github.com/Veken/LineChartView/raw/master/image/chartview.gif)</br>
 
-饼状图有内圆
+饼状图有内圆</br>
 ![饼状图有内圆](https://github.com/Veken/LineChartView/raw/master/image/piechart_inside.gif)</br>
 
-饼状图没有内圆
+饼状图没有内圆</br>
 ![饼状图没有内圆](https://github.com/Veken/LineChartView/raw/master/image/piechart.gif)</br>
 
 ## Usage
@@ -164,6 +165,7 @@ barChartView.setData(barChartBeanList);
         app:insideRadiusPercent="0.5"/>
 ```
 > 饼状图自定义属性
+
 attrs | description
 ---|---
 textColor | 百分比文字颜色
