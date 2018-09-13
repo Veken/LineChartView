@@ -1,9 +1,15 @@
 # ChartView
 
-ChartView是一个Android开源图表库。目前仅支持折线图，曲线图，柱状图，以及点击之后的状态变化，可以选择是画一个图片还是一个背景框。
+ChartView是一个Android开源图表库。目前仅支持折线图，曲线图，柱状图，饼状图，以及折线图和曲线图点击之后的状态变化，可以选择是画一个图片还是一个背景框。
 
 ### Screens
-![](https://github.com/Veken/LineChartView/raw/master/image/chartview.gif)</br>
+![折线图和曲线图](https://github.com/Veken/LineChartView/raw/master/image/chartview.gif)</br>
+
+饼状图有内圆
+![饼状图有内圆](https://github.com/Veken/LineChartView/raw/master/image/piechart_inside.gif)</br>
+
+饼状图没有内圆
+![饼状图没有内圆](https://github.com/Veken/LineChartView/raw/master/image/piechart.gif)</br>
 
 ## Usage
 
@@ -146,7 +152,60 @@ for (int i = 0; i < 7; i++) {
 barChartView.setData(barChartBeanList);
 ```
 
+### 饼状图
+### XML
+```
+  <com.veken.chartview.view.PieChartView
+        android:id="@+id/piechart_view"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:insideText="Hello"
+        app:insideTextColor="@color/default_color"
+        app:insideRadiusPercent="0.5"/>
+```
+> 饼状图自定义属性
+attrs | description
+---|---
+textColor | 百分比文字颜色
+textOutCircleMargin | 文字和圆之间的间距
+isNeedInside | 是否需要内圆
+insideText | 内圆显示的文字
+insideBgColor | 内圆背景颜色
+insideTextSize | 内圆文字大小
+insideTextColor | 内圆文字颜色
+insideRadiusPercent | 内圆半径占外圆半径的大小,默认(0.5)
 
+### Java
+```
+private PieChartView pieChartView;
+pieChartView = view.findViewById(R.id.piechart_view);
+//内圆中间文字
+pieChartView.setInsideText("Hello");
+//是否需要加载动画
+pieChartView.setIsNeedAnimation(true,5000);
+//是否需要背景
+pieChartView.setNeedInside(false);
+```
+### Data
+```
+private List<PieChartBean> mList;
+if(mList==null){
+    mList = new ArrayList<>();
+}
+//各个扇形的背景颜色
+int[] colors = new int[]{getResources().getColor(R.color.colorAccent),
+	getResources().getColor(R.color.default_color),
+	getResources().getColor(R.color.colorPrimary),
+	getResources().getColor(R.color.endColor)};
+Random random = new Random();
+for(int i = 0;i<4;i++){
+    PieChartBean pieChartBean = new PieChartBean();
+    pieChartBean.setValue(random.nextInt(10)+i);
+    pieChartBean.setColor(colors[i]);
+    mList.add(pieChartBean);
+}
+pieChartView.setData(mList);
+```
 
 ## License
 ```
