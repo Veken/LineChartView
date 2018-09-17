@@ -21,7 +21,7 @@ ChartView是一个Android开源图表库。目前仅支持折线图，曲线图�
 * Step 1. Add LineChartView
 ```
     dependencies {
-	       compile 'com.veken:chart_view:1.0.1'
+	       compile 'com.veken:chart_view:1.0.2'
 	}
 ```
 ### 折线图
